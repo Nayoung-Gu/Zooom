@@ -17,72 +17,12 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
-function publicRooms() {
-    const {
-        sockets: {
-            adapter: { sids, rooms },
-        },
-    } = wsServer;
-
-    const publicRooms = [];
-    rooms.forEach((_, key) => {
-        if (sids.get(key) === undefined) {
-            publicRooms.push(key);
-        }
-    });
-    return publicRooms;
-}
-
-function countRooms(roomName) {
-    return wsServer.sockets.adapter.rooms.get(roomName)?.size;
-}
-
 wsServer.on("connection", (socket) => {
-    socket["nickname"] = "Anonymous";
-    socket.on("enter_room", (roomName, done) => {
+    socket.on("join_room", (roomName, done) => {
         socket.join(roomName);
         done();
-        socket
-            .to(roomName)
-            .emit("welcome", socket.nickname, countRooms(roomName));
-        wsServer.sockets.emit("room_change", publicRooms());
+        socket.to(roomName).emit("welcome");
     });
-    socket.on("disconnecting", () => {
-        socket.rooms.forEach((room) =>
-            socket.to(room).emit("bye", socket.nickname, countRooms(room) - 1)
-        );
-    });
-    socket.on("disconnect", () => {
-        wsServer.sockets.emit("room_change", publicRooms());
-    });
-    socket.on("new_message", (msg, room, done) => {
-        socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
-        done();
-    });
-    socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
 });
-
-// WebSocket
-// const server = http.createServer(app);
-// const wss = new WebSocket.Server({ server });
-// In server.js socket means connected browser
-// const sockets = [];
-// wss.on("connection", (socket) => {
-//     sockets.push(socket);
-//     socket["nickname"] = "Anonymous";
-//     console.log("Connected to the Browser ✅");
-//     // socket.on("close", console.log("Disconnected from the Browser ❌"));
-//     socket.on("message", (msg) => {
-//         const message = JSON.parse(msg);
-//         switch (message.type) {
-//             case "new_message":
-//                 sockets.forEach((aSocket) =>
-//                     aSocket.send(`${socket.nickname}: ${message.payload}`)
-//                 );
-//             case "nickname":
-//                 socket["nickname"] = message.payload;
-//         }
-//     });
-// });
 
 httpServer.listen(3000, handleListen);
