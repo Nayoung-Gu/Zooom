@@ -19,8 +19,12 @@ const wsServer = SocketIO(httpServer);
 
 wsServer.on("connection", (socket) => {
     socket.on("join_room", (roomName) => {
-        socket.join(roomName);
-        socket.to(roomName).emit("welcome");
+        if (wsServer.sockets.adapter.rooms.get(roomName)?.size === 2) {
+            socket.emit("dismiss");
+        } else {
+            socket.join(roomName);
+            socket.to(roomName).emit("welcome");
+        }
     });
     socket.on("offer", (offer, roomName) => {
         socket.to(roomName).emit("offer", offer);

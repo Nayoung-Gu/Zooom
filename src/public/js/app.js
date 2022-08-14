@@ -125,6 +125,11 @@ async function handleWelcomeSubmit(e) {
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
+socket.on("full", () => {
+    window.alert("This room is already full! (2/2)");
+    window.location.reload(true);
+});
+
 // Socket code
 // Peer A
 socket.on("welcome", async () => {
