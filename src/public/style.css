@@ -1,0 +1,52 @@
+* {
+    font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    color: #333;
+    box-sizing: border-box;
+    /* background-color: #80558c; */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    background-color: #80558c;
+    border: none;
+}
+
+form input,
+form button {
+    width: 100%;
+}
+
+input:focus {
+    outline-color: #cba0ae;
+}
+
+select {
+    width: 100%;
+}
+
+h1 {
+    color: #80558c;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+#welcome form {
+    width: 500px;
+}
+
+.btn-wrap {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.btn-wrap button {
+    flex-grow: 1;
+}

@@ -79,10 +79,10 @@ function handleCameraClick() {
         .getVideoTracks()
         .forEach((track) => (track.enabled = !track.enabled));
     if (cameraOff) {
-        cameraBtn.innerText = "Turn Camera Off";
+        cameraBtn.innerText = "Camera Off";
         cameraOff = false;
     } else {
-        cameraBtn.innerText = "Turn Camera On";
+        cameraBtn.innerText = "Camera On";
         cameraOff = true;
     }
 }
@@ -148,14 +148,14 @@ socket.on("offer", async (offer) => {
     console.log("sent the answer");
 });
 
-socket.on("answer", (answer) => {
+socket.on("answer", async (answer) => {
     console.log("received the answer");
-    myPeerConnection.setRemoteDescription(answer);
+    await myPeerConnection.setRemoteDescription(answer);
 });
 
 socket.on("ice", (ice) => {
     console.log("received candidate");
-    myPeerConnection.addICECandidate(ice);
+    myPeerConnection.addIceCandidate(ice);
 });
 
 // RTC Code
